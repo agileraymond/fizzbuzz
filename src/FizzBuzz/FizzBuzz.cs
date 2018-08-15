@@ -31,6 +31,7 @@ namespace Game
             if (string.IsNullOrEmpty(result.ToString()))
                 result.Append(number.ToString());
 
+            Console.WriteLine(result.ToString());
             return result.ToString();
         }
 
@@ -48,9 +49,16 @@ namespace Game
 
         private int ParseNumber(string wordNumber)
         {
-            int number = int.Parse(wordNumber);    
-            return number;
-            //int.TryParse(wordNumber, out number);
+            if (string.IsNullOrEmpty(wordNumber))
+                throw new NullReferenceException("number is null");
+
+            // try to parse a number
+            int number = 0;
+            if (int.TryParse(wordNumber, out number))
+                return number;
+            
+            // try to find a number 
+            return FindNumber(wordNumber);
         }
 
         private List<string> GetResults(int minNumber, int maxNumber)
@@ -63,6 +71,28 @@ namespace Game
             }            
 
             return results;
+        }
+
+        private int FindNumber(string wordNumber)
+        {
+            // using in memory Dictionary for now
+            // research a better way to store these values
+            var dictNumbers = new Dictionary<string, int>();
+            dictNumbers.Add("one", 1);
+            dictNumbers.Add("two", 2);
+            dictNumbers.Add("three", 3);
+            dictNumbers.Add("four", 4);
+            dictNumbers.Add("five", 5);
+            dictNumbers.Add("six", 6);
+            dictNumbers.Add("seven", 7);
+            dictNumbers.Add("eight", 8);
+            dictNumbers.Add("nine", 9);
+            dictNumbers.Add("ten", 10);
+
+            if (dictNumbers.ContainsKey(wordNumber.ToLower()))
+                return dictNumbers[wordNumber.ToLower()];
+
+            throw new Exception("Unable to find a number");
         }
     }
 }
